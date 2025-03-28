@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Book } from "@/types/book";
-import BookForm from "@/app/CustomComponents/BookForm";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Loader2, Trash2 } from "lucide-react";
 
 export default function BookDetailPage({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -29,7 +29,6 @@ export default function BookDetailPage({ params }: { params: { id: string } }) {
         setIsLoading(false);
       }
     }
-
     fetchBook();
   }, [id]);
 
@@ -38,11 +37,9 @@ export default function BookDetailPage({ params }: { params: { id: string } }) {
       const response = await fetch(`/api/books/${id}`, {
         method: "DELETE",
       });
-
       if (!response.ok) {
         throw new Error("Failed to delete book");
       }
-
       router.push("/books");
     } catch (err) {
       setError("Failed to delete book");
@@ -51,31 +48,38 @@ export default function BookDetailPage({ params }: { params: { id: string } }) {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-full">
-        <Loader2 className="animate-spin" />
+      <div className="flex justify-center items-center h-screen">
+        <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
 
   if (error) {
-    return <div className="text-red-500 text-center">{error}</div>;
+    return <div className="text-red-500 text-center mt-10">{error}</div>;
   }
 
   return (
-    <div>
+    <div className="container mx-auto px-4 py-8">
       {book ? (
-        <>
-          <BookForm initialData={book} />
-          <div className="container mx-auto px-4 max-w-md mt-4">
-            <Button
-              variant="destructive"
-              className="w-full"
-              onClick={handleDelete}
-            >
-              Delete Book
-            </Button>
-          </div>
-        </>
+        <Card className="max-w-2xl mx-auto">
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold">{book.title}</CardTitle>
+            <p className="text-muted-foreground">by {book.author}</p>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center mt-6">
+                <Button variant="outline" onClick={() => router.push("/books")}>
+                  Back to Library
+                </Button>
+                <Button variant="destructive" onClick={handleDelete}>
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete Book
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       ) : null}
     </div>
   );
