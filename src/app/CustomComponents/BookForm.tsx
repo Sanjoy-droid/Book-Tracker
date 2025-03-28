@@ -18,15 +18,16 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 
 // Validation Schema
+
 const bookSchema = z.object({
+  id: z.string().optional(), // Add this line
   title: z.string().min(1, "Title is required"),
   author: z.string().min(1, "Author is required"),
-  genre: z.string().optional(),
+  genre: z.string().nullable().optional(),
   status: z.enum(["UNREAD", "READING", "COMPLETED", "ABANDONED"]).optional(),
-  rating: z.number().min(1).max(5).optional(),
-  notes: z.string().optional(),
+  rating: z.number().min(1).max(5).nullable().optional(),
+  notes: z.string().nullable().optional(),
 });
-
 interface BookFormProps {
   initialData?: Book;
 }
@@ -40,11 +41,10 @@ export default function BookForm({ initialData }: BookFormProps) {
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<Book>({
+  } = useForm<z.infer<typeof bookSchema>>({
     resolver: zodResolver(bookSchema),
     defaultValues: initialData,
   });
-
   const onSubmit = async (data: Book) => {
     try {
       const url = initialData?.id
@@ -83,7 +83,7 @@ export default function BookForm({ initialData }: BookFormProps) {
         </div>
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <form className="space-y-4">
         <div>
           <label className="block mb-2">Title</label>
           <Input {...register("title")} placeholder="Book Title" />
