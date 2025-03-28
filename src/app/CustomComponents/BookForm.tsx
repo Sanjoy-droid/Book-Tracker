@@ -17,17 +17,20 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
+import { BookStatus } from "@/types/book";
+
 // Validation Schema
 
 const bookSchema = z.object({
-  id: z.string().optional(), // Add this line
+  id: z.string().optional(),
   title: z.string().min(1, "Title is required"),
   author: z.string().min(1, "Author is required"),
   genre: z.string().nullable().optional(),
-  status: z.enum(["UNREAD", "READING", "COMPLETED", "ABANDONED"]).optional(),
+  status: z.nativeEnum(BookStatus).optional(), // Fix here
   rating: z.number().min(1).max(5).nullable().optional(),
   notes: z.string().nullable().optional(),
 });
+
 interface BookFormProps {
   initialData?: Book;
 }
@@ -47,27 +50,55 @@ export default function BookForm({ initialData }: BookFormProps) {
   });
   const onSubmit = async (data: Book) => {
     try {
-      const url = initialData?.id
-        ? `/api/books/${initialData.id}`
-        : "/api/books";
+      // Prepare data for submission
+      const preparedData = {
+        ...data,
+        genre: data.genre || null,
+        rating: data.rating || null,
+        notes: data.notes || null,
+        status: data.status || null,
+      };
 
-      const method = initialData?.id ? "PUT" : "POST";
+      console.log("Prepared book data:", preparedData);
+
+      const url = preparedData.id
+        ? `/api/books/${preparedData.id}`
+        : "/api/books";
+      const method = preparedData.id ? "PUT" : "POST";
 
       const response = await fetch(url, {
         method,
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(preparedData),
       });
 
+      console.log("Response status:", response.status);
+
       if (!response.ok) {
-        throw new Error("Failed to save book");
+        const errorText = await response.text();
+        console.error("Error details:", {
+          status: response.status,
+          statusText: response.statusText,
+          errorMessage: errorText,
+        });
+        throw new Error(
+          `HTTP error! status: ${response.status}, message: ${errorText}`,
+        );
       }
+
+      const result = await response.json();
+      console.log("Save result:", result);
 
       router.push("/books");
     } catch (err) {
-      setError("Failed to save book. Please try again.");
+      console.error("Full submission error:", err);
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to save book. Please try again.",
+      );
     }
   };
 
@@ -83,7 +114,7 @@ export default function BookForm({ initialData }: BookFormProps) {
         </div>
       )}
 
-      <form className="space-y-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <label className="block mb-2">Title</label>
           <Input {...register("title")} placeholder="Book Title" />
@@ -134,6 +165,31 @@ export default function BookForm({ initialData }: BookFormProps) {
           />
         </div>
 
+        <div>
+          <label className="block mb-2">Rating (1-5)</label>
+          <Controller
+            name="rating"
+            control={control}
+            render={({ field }) => (
+              <Input
+                type="number"
+                min="1"
+                max="5"
+                value={field.value ?? ""}
+                onChange={(e) => {
+                  const value = e.target.value
+                    ? parseInt(e.target.value, 10)
+                    : null;
+                  field.onChange(value);
+                }}
+                placeholder="Enter rating (1-5)"
+              />
+            )}
+          />
+          {errors.rating && (
+            <p className="text-red-500 text-sm mt-1">{errors.rating.message}</p>
+          )}
+        </div>
         <Button type="submit" className="w-full">
           {initialData ? "Update Book" : "Add Book"}
         </Button>

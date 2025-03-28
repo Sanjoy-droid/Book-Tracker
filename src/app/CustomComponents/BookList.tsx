@@ -80,7 +80,7 @@ export default function BookList() {
             <Card key={book.id} className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <CardTitle>{book.title}</CardTitle>
-                <p className="text-muted-foreground">{book.author}</p>
+                <p className="text-muted-foreground">by {book.author}</p>
               </CardHeader>
               <CardContent>
                 <div className="flex justify-between">

@@ -1,18 +1,14 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Book } from "@/types/book";
 import BookForm from "@/app/CustomComponents/BookForm";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 
-export default function BookDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = use(params); // Correctly unwrapping the params
+export default function BookDetailPage({ params }: { params: { id: string } }) {
+  const { id } = params;
   const [book, setBook] = useState<Book | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
