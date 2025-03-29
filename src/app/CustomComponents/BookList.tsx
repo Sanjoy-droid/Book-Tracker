@@ -131,7 +131,7 @@ export default function BookList() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-3xl font-bold">My Books</h1>
-          <p className="text-slate-600 dark:text-slate-400 mt-1">
+          <p className="text-slate-400 mt-1">
             You have {books.length} book{books.length !== 1 ? "s" : ""} in your
             library
           </p>
@@ -144,9 +144,11 @@ export default function BookList() {
       </div>
 
       {books.length === 0 ? (
-        <div className="text-center p-10 border border-dashed border-slate-300 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-900">
+        <div className="text-center p-10 border border-dashed border-slate-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900">
           <BookOpen className="h-12 w-12 mx-auto text-slate-400 mb-4" />
-          <h3 className="text-lg font-medium mb-2">Your library is empty</h3>
+          <h3 className="text-lg font-medium text-slate-900 dark:text-white mb-2">
+            Your library is empty
+          </h3>
           <p className="text-slate-600 dark:text-slate-400 mb-6">
             Start building your collection by adding your first book.
           </p>
@@ -161,19 +163,21 @@ export default function BookList() {
           {books.map((book) => (
             <Card
               key={book.id}
-              className="hover:shadow-lg transition-shadow overflow-hidden border border-slate-200 dark:border-slate-800"
+              className="hover:shadow-lg transition-shadow overflow-hidden border border-slate-200 dark:border-slate-800 bg-slate-900"
             >
               <div className="h-2 bg-gradient-to-r from-blue-500 to-indigo-600"></div>
               <CardHeader>
                 <div className="flex justify-between items-start">
                   <div>
-                    <CardTitle className="line-clamp-1">{book.title}</CardTitle>
-                    <p className="text-muted-foreground line-clamp-1">
+                    <CardTitle className="line-clamp-1 text-white">
+                      {book.title}
+                    </CardTitle>
+                    <p className="text-muted-foreground text-slate-400 line-clamp-1">
                       by {book.author}
                     </p>
                   </div>
                   <Link href={`/books/edit/${book.id}`}>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <Button variant="outline" size="icon" className="h-8 w-8">
                       <Pencil className="w-4 h-4" />
                     </Button>
                   </Link>
@@ -186,8 +190,7 @@ export default function BookList() {
                       {book.genre}
                     </Badge>
                   )}
-
-                  <div className="flex items-center text-sm text-slate-600 dark:text-slate-400 space-x-4">
+                  <div className="flex items-center text-sm text-slate-400 space-x-4">
                     {book.rating && (
                       <div className="flex items-center">
                         <Star className="h-3.5 w-3.5 mr-1 text-amber-500" />
@@ -200,7 +203,11 @@ export default function BookList() {
               <CardFooter className="border-t border-slate-100 dark:border-slate-800 pt-4">
                 <div className="flex justify-between w-full">
                   <Link href={`/books/${book.id}`} className="flex-1 mr-2">
-                    <Button variant="outline" size="sm" className="w-full">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full bg-white dark:bg-slate-900"
+                    >
                       <Eye className="w-3.5 h-3.5 mr-1" /> View
                     </Button>
                   </Link>

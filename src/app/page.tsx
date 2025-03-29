@@ -6,10 +6,10 @@ export default function Home() {
   return (
     <div className="container mx-auto px-4 py-16">
       <div className="max-w-3xl mx-auto text-center mb-16">
-        <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+        <h1 className="text-5xl font-bold mb-6 text-indigo-400">
           Book Tracker
         </h1>
-        <p className="text-xl mb-8 text-slate-700 dark:text-slate-300">
+        <p className="text-xl mb-8 text-slate-300">
           Manage your reading journey, track your books, and explore your
           library.
         </p>
@@ -61,7 +61,7 @@ export default function Home() {
         ].map((feature, index) => (
           <div
             key={index}
-            className="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow"
+            className=" bg-slate-900 p-6 rounded-xl shadow-sm border border-slate-800 hover:shadow-md transition-shadow"
           >
             <div className="mb-4">{feature.icon}</div>
             <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
