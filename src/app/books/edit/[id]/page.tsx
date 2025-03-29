@@ -4,7 +4,13 @@ import { useRouter } from "next/navigation";
 import { Book } from "@/types/book";
 import BookForm from "@/app/CustomComponents/BookForm";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Loader2, Trash2, AlertTriangle } from "lucide-react";
+import {
+  ArrowLeft,
+  Loader2,
+  Trash2,
+  AlertTriangle,
+  BookOpen,
+} from "lucide-react";
 import Link from "next/link";
 import {
   AlertDialog,
@@ -17,6 +23,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import toast from "react-hot-toast";
 
 export default function BookEditPage({ params }: { params: { id: string } }) {
@@ -53,10 +60,10 @@ export default function BookEditPage({ params }: { params: { id: string } }) {
         method: "DELETE",
       });
       if (!response.ok) {
-        toast.error("Error Deleting book");
+        toast.error("Error deleting book");
         throw new Error("Failed to delete book");
       }
-      toast.success("Books Deleted successfully");
+      toast.success("Book deleted successfully");
       router.push("/books");
     } catch (err) {
       setError("Failed to delete book");
@@ -66,9 +73,9 @@ export default function BookEditPage({ params }: { params: { id: string } }) {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col justify-center items-center h-64">
-        <Loader2 className="h-12 w-12 animate-spin text-blue-600 mb-4" />
-        <p className="text-slate-600 dark:text-slate-400">
+      <div className="flex flex-col justify-center items-center h-96 bg-slate-50 dark:bg-slate-900 bg-opacity-60 dark:bg-opacity-60 backdrop-blur-sm rounded-xl p-8 border border-slate-200 dark:border-slate-800 shadow-sm">
+        <Loader2 className="h-16 w-16 animate-spin text-primary mb-6" />
+        <p className="text-slate-600 dark:text-slate-400 text-lg font-medium">
           Loading book details...
         </p>
       </div>
@@ -77,85 +84,120 @@ export default function BookEditPage({ params }: { params: { id: string } }) {
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8 max-w-md text-center">
-        <div className="bg-red-100 dark:bg-red-900/30 p-8 rounded-lg border border-red-200 dark:border-red-800">
-          <div className="inline-flex items-center justify-center h-16 w-16 rounded-full bg-red-100 dark:bg-red-900 mb-4">
-            <AlertTriangle className="h-8 w-8 text-red-600 dark:text-red-400" />
+      <div className="container mx-auto px-4 py-12 max-w-md">
+        <Card className="border-red-200 dark:border-red-800 shadow-lg overflow-hidden">
+          <div className="bg-red-50 dark:bg-red-900/20 p-8">
+            <div className="flex justify-center">
+              <div className="inline-flex items-center justify-center h-20 w-20 rounded-full bg-red-100 dark:bg-red-900/40 mb-4 shadow-inner">
+                <AlertTriangle className="h-10 w-10 text-red-600 dark:text-red-400" />
+              </div>
+            </div>
+            <h2 className="text-2xl font-bold text-red-700 dark:text-red-400 mb-2 text-center">
+              Error Loading Book
+            </h2>
+            <p className="text-red-600 dark:text-red-300 mb-6 text-center">
+              {error}
+            </p>
+            <div className="flex justify-center">
+              <Link href="/books">
+                <Button
+                  size="lg"
+                  className="shadow-md hover:shadow-lg transition-all"
+                >
+                  <ArrowLeft className="mr-2 h-5 w-5" />
+                  Back to Library
+                </Button>
+              </Link>
+            </div>
           </div>
-          <h2 className="text-2xl font-bold text-red-700 dark:text-red-400 mb-2">
-            Error
-          </h2>
-          <p className="text-red-600 dark:text-red-300 mb-6">{error}</p>
-          <Link href="/books">
-            <Button>
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Books
-            </Button>
-          </Link>
-        </div>
+        </Card>
       </div>
     );
   }
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl">
-      <div className="flex items-center mb-6">
-        <Link href="/books" className="mr-4">
-          <Button variant="outline" size="icon" className="h-8 w-8">
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        </Link>
-        <h1 className="text-3xl font-bold">Edit Book</h1>
-      </div>
-
-      {book ? (
-        <>
-          <BookForm initialData={book} />
-
-          <div className="mt-6">
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="destructive" className="w-full">
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  Delete Book
+      <Card className="border border-slate-200 dark:border-slate-800 shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden">
+        <CardHeader className="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <Link href="/books" className="mr-4">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-9 w-9 rounded-full shadow-sm hover:shadow transition-all"
+                >
+                  <ArrowLeft className="h-5 w-5" />
                 </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone. This will permanently delete
-                    <span className="font-semibold"> {book.title} </span>
-                    from your library.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel disabled={isDeleting}>
-                    Cancel
-                  </AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={handleDelete}
-                    disabled={isDeleting}
-                    className="bg-red-600 hover:bg-red-700"
+              </Link>
+              <div className="flex items-center">
+                <BookOpen className="h-6 w-6 text-primary mr-3" />
+                <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+                  Edit Book
+                </h1>
+              </div>
+            </div>
+
+            {book && (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-9 w-9 border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 dark:border-red-800 dark:text-red-500 dark:hover:bg-red-950/30 rounded-full shadow-sm hover:shadow transition-all"
                   >
-                    {isDeleting ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Deleting...
-                      </>
-                    ) : (
-                      <>
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        Delete
-                      </>
-                    )}
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+                    <Trash2 className="h-5 w-5" />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent className="border-red-200 dark:border-red-900 shadow-lg">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="text-red-700 dark:text-red-400 text-xl">
+                      Are you sure you want to delete this book?
+                    </AlertDialogTitle>
+                    <AlertDialogDescription className="text-slate-600 dark:text-slate-400">
+                      This action cannot be undone. This will permanently delete
+                      <span className="font-semibold text-red-600 dark:text-red-400">
+                        {" "}
+                        {book.title}{" "}
+                      </span>
+                      from your library.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel
+                      disabled={isDeleting}
+                      className="border-slate-200 dark:border-slate-700"
+                    >
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={handleDelete}
+                      disabled={isDeleting}
+                      className="bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white shadow-md"
+                    >
+                      {isDeleting ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Deleting...
+                        </>
+                      ) : (
+                        <>
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Delete Book
+                        </>
+                      )}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
           </div>
-        </>
-      ) : null}
+        </CardHeader>
+
+        <CardContent className="p-6">
+          {book ? <BookForm initialData={book} /> : null}
+        </CardContent>
+      </Card>
     </div>
   );
 }
