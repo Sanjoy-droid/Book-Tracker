@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Book } from "@/types/book";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Plus } from "lucide-react";
+import { Loader2, Plus, Pencil } from "lucide-react";
 
 export default function BookList() {
   const [books, setBooks] = useState<Book[]>([]);
@@ -79,8 +79,17 @@ export default function BookList() {
           {books.map((book) => (
             <Card key={book.id} className="hover:shadow-lg transition-shadow">
               <CardHeader>
-                <CardTitle>{book.title}</CardTitle>
-                <p className="text-muted-foreground">by {book.author}</p>
+                <div className="flex justify-between items-start">
+                  <div>
+                    <CardTitle>{book.title}</CardTitle>
+                    <p className="text-muted-foreground">by {book.author}</p>
+                  </div>
+                  <Link href={`/books/edit/${book.id}`}>
+                    <Button variant="ghost" size="icon">
+                      <Pencil className="w-4 h-4" />
+                    </Button>
+                  </Link>
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="flex justify-between">
