@@ -67,10 +67,10 @@ export default function BookEditPage({ params }: { params: { id: string } }) {
       {book ? (
         <>
           <BookForm initialData={book} />
-          <div className="max-w-md mt-4">
+          <div className="max-w-md mt-4 ">
             <Button
               variant="destructive"
-              className="w-full"
+              className="w-full "
               onClick={handleDelete}
             >
               Delete Book
