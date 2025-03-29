@@ -57,13 +57,13 @@ export default function Navbar() {
 
 function NavLinks({ mobile = false }: { mobile?: boolean }) {
   const linkClasses = mobile
-    ? "block py-2 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400"
-    : "text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400";
+    ? "block py-2 px-4 rounded-md text-slate-700 dark:text-slate-300 hover:bg-blue-600 hover:text-white transition"
+    : "px-4 py-2 rounded-md text-slate-700 font-bold dark:text-slate-300 hover:bg-blue-600 hover:text-white transition";
 
   return (
     <>
       <Link href="/books" className={linkClasses}>
-        My Books
+        📚 My Books
       </Link>
     </>
   );

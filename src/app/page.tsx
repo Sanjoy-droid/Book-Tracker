@@ -22,7 +22,7 @@ export default function Home() {
               View My Books
             </Button>
           </Link>
-          <Link href="/add-book">
+          <Link href="/books/new">
             <Button
               size="lg"
               variant="outline"
