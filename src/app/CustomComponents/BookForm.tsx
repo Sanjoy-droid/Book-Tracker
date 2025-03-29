@@ -37,6 +37,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import toast from "react-hot-toast";
 
 // Validation Schema
 const bookSchema = z.object({
@@ -73,8 +74,9 @@ export default function BookForm({ initialData }: BookFormProps) {
 
   const onSubmit = async (data: Book) => {
     setIsSubmitting(true);
+    setError(null);
+
     try {
-      // Prepare data for submission
       const preparedData = {
         ...data,
         genre: data.genre || null,
@@ -104,6 +106,14 @@ export default function BookForm({ initialData }: BookFormProps) {
       }
 
       await response.json();
+
+      // Show success toast based on add/update
+      toast.success(
+        preparedData.id
+          ? "Book updated successfully!"
+          : "New Book added successfully!",
+      );
+
       router.push("/books");
     } catch (err) {
       setError(
@@ -111,6 +121,7 @@ export default function BookForm({ initialData }: BookFormProps) {
           ? err.message
           : "Failed to save book. Please try again.",
       );
+    } finally {
       setIsSubmitting(false);
     }
   };

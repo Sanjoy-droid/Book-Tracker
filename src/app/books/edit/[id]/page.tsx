@@ -17,6 +17,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import toast from "react-hot-toast";
 
 export default function BookEditPage({ params }: { params: { id: string } }) {
   const { id } = params;
@@ -31,6 +32,7 @@ export default function BookEditPage({ params }: { params: { id: string } }) {
       try {
         const response = await fetch(`/api/books/${id}`);
         if (!response.ok) {
+          toast.error("Failed to fetch book");
           throw new Error("Failed to fetch book");
         }
         const data = await response.json();
@@ -51,8 +53,10 @@ export default function BookEditPage({ params }: { params: { id: string } }) {
         method: "DELETE",
       });
       if (!response.ok) {
+        toast.error("Error Deleting book");
         throw new Error("Failed to delete book");
       }
+      toast.success("Books Deleted successfully");
       router.push("/books");
     } catch (err) {
       setError("Failed to delete book");
