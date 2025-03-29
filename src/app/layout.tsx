@@ -4,6 +4,9 @@ import "./globals.css";
 import Navbar from "./CustomComponents/Navbar";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@/components/ui/theme-provider";
+import Link from "next/link";
+
+import { Github } from "lucide-react";
 
 // Load local fonts
 const geistSans = localFont({
@@ -56,25 +59,33 @@ export default function RootLayout({
                       Book Tracker
                     </span>
                     <span>&copy; {new Date().getFullYear()}</span>
+                    <Link
+                      href="https://github.com/Sanjoy-droid/Book-Tracker"
+                      target="_blank"
+                      className="transform text-gray-500 transition duration-300 hover:scale-110 hover:text-indigo-500"
+                    >
+                      <Github size={24} />
+                    </Link>
                   </div>
                   <div className="text-gray-500 dark:text-indigo-400">
                     Your Reading Journey
                   </div>
+
                   <div className="flex space-x-4">
                     <a
-                      href="#"
+                      href="/privacy"
                       className="text-gray-500 dark:text-indigo-400 hover:text-indigo-300 transition-colors"
                     >
                       Privacy
                     </a>
                     <a
-                      href="#"
+                      href="/terms"
                       className="text-gray-500 dark:text-indigo-400 hover:text-indigo-300 transition-colors"
                     >
                       Terms
                     </a>
                     <a
-                      href="#"
+                      href="/contact"
                       className="text-gray-500 dark:text-indigo-400 hover:text-indigo-300 transition-colors"
                     >
                       Contact
