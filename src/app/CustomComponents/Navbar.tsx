@@ -63,7 +63,7 @@ function NavLinks({ mobile = false }: { mobile?: boolean }) {
   return (
     <>
       <Link href="/books" className={linkClasses}>
-        📚 My Books dklfjd
+        📚 My Books
       </Link>
     </>
   );
