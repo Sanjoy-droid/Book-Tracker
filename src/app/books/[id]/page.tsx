@@ -248,7 +248,7 @@ export default function BookDetailPage({ params }: { params: { id: string } }) {
             <div className="flex justify-between items-center pt-4 mt-6 border-t border-slate-200 dark:border-slate-800">
               <Button
                 variant="outline"
-                onClick={() => router.push(`/books/${id}/edit`)}
+                onClick={() => router.push(`/books/edit/${id}`)}
                 className="border-blue-200 text-blue-700 hover:text-blue-800 hover:bg-blue-50 dark:border-blue-900 dark:text-blue-400 dark:hover:bg-blue-900/30"
               >
                 <Edit className="mr-2 h-4 w-4" />
